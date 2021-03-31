@@ -1,5 +1,6 @@
 package com.wine.to.up.proxy_service.service.impl;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wine.to.up.proxy_service.service.ProxyClient;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -32,6 +34,11 @@ public class ProxyClientImpl implements ProxyClient {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
+    @PostConstruct
+    public void init() {
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
     @Override
     public List<Proxy> getProxyList() {
         HttpUrl.Builder builder = HttpUrl.parse(apiUrl).newBuilder();
@@ -49,7 +56,7 @@ public class ProxyClientImpl implements ProxyClient {
                             new InetSocketAddress(proxy.ip, proxy.port)))
                     .collect(Collectors.toList());
             if(!proxyList.isEmpty()) {
-                log.info("Valid proxy count : {}", proxyList.size());
+                log.info("Proxy count : {}", proxyList.size());
                 return proxyList;
             } else {
                 log.info("Trying again with proxy");

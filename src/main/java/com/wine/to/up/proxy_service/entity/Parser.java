@@ -12,13 +12,19 @@ public enum Parser {
     WINESTYLE_PARSER_SERVICE("winestyle-parser-service", "https://spb.winestyle.ru/"),
     WINELAB_PARSER_SERVICE("winelab-parser-service", "https://www.winelab.ru/");
 
-    String name;
-    String path;
+    private final String name;
+    private final String path;
 
     Parser(String name, String path) {
         this.name = name;
         this.path = path;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public String getPath() {
+        return path;
+    }
 }

@@ -25,5 +25,6 @@ public class Proxy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String url;
+    private String ip;
+    private String port;
 }

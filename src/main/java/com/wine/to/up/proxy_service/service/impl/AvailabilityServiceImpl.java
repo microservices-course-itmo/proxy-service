@@ -1,4 +1,4 @@
-package com.wine.to.up.proxy_service.service.inpl;
+package com.wine.to.up.proxy_service.service.impl;
 
 import com.wine.to.up.proxy_service.entity.Parser;
 import com.wine.to.up.proxy_service.service.AvailabilityService;

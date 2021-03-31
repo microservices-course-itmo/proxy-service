@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ProxyValidatorService {
 
-    List<ProxyDto> validateProxy(List<Proxy> proxyList);
+    boolean isProxyAlive(Proxy proxy);
 
-    List<ProxyDto> validateProxy(List<Proxy> proxyList, String url);
+    long pingUrlWithProxy(String url, Proxy proxy);
 }

@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface ProxyClient {
 
-    List<Proxy> getProxiesList();
+    List<Proxy> getProxyList();
 }

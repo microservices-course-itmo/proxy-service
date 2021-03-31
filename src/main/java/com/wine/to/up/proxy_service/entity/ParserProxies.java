@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * @author : skorz
+ * @author : bgubanov
  * @since : 30.03.2021, вт
  **/
 @Entity

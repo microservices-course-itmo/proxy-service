@@ -1,6 +1,7 @@
 package com.wine.to.up.proxy_service.service;
 
 import com.wine.to.up.proxy_service.entity.Parser;
+import com.wine.to.up.proxy_service.entity.Proxy;
 
 import java.util.concurrent.TimeoutException;
 
@@ -10,5 +11,5 @@ import java.util.concurrent.TimeoutException;
  **/
 
 public interface AvailabilityService {
-    long measurePingParser(Parser parser) throws TimeoutException;
+    long measurePingParserWithProxy(Parser parser, Proxy proxy) throws TimeoutException;
 }

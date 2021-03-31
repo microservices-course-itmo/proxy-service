@@ -28,7 +28,7 @@ public class ProxyController {
 
     @GetMapping("/proxies")
     public List<ParserProxies> getProxies(@RequestParam String serviceName) {
-        return restService.getProxies();
+        return restService.getProxies(serviceName);
     }
 
     @GetMapping("/parsers")

@@ -5,5 +5,12 @@ package com.wine.to.up.proxy_service.entity;
  * @since : 30.03.2021, вт
  **/
 public enum Parser {
-    AM_PARSER_SERVICE;
+    AM_PARSER_SERVICE("https://amwine.ru/"),
+    LENTA_PARSER_SERVICE("https://lenta.com");
+
+    String path;
+
+    Parser(String path) {
+        this.path = path;
+    }
 }

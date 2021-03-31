@@ -1,5 +1,9 @@
 package com.wine.to.up.proxy_service.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +16,9 @@ import javax.persistence.Table;
  **/
 @Entity
 @Table(name = "proxies")
+@Setter
+@Getter
+@NoArgsConstructor
 public class Proxy {
 
     @Id

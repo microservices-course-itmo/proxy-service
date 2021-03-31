@@ -1,18 +1,21 @@
 package com.wine.to.up.proxy_service.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
 
 /**
  * @author : bgubanov
  * @since : 30.03.2021, вт
  **/
+
 @Entity
 @Table(name = "parser_proxies")
+@Setter
+@Getter
+@NoArgsConstructor
 public class ParserProxies {
 
     @Id
@@ -20,6 +23,8 @@ public class ParserProxies {
     private Long id;
     @Column(name = "parser_name")
     private String parserName;
-
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id")
+    private Proxy proxy;
     private Float ping;
 }

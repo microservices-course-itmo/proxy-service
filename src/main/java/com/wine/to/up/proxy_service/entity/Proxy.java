@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.net.InetSocketAddress;
 
 /**
  * @author : bgubanov
@@ -26,5 +27,16 @@ public class Proxy {
     private Long id;
 
     private String ip;
-    private String port;
+    private Integer port;
+
+    public Proxy(java.net.Proxy proxy) {
+        InetSocketAddress socketAddress = (InetSocketAddress) proxy.address();
+        this.ip = socketAddress.getHostName();
+        this.port = socketAddress.getPort();
+    }
+
+    public Proxy(String ip, Integer port) {
+        this.ip = ip;
+        this.port = port;
+    }
 }

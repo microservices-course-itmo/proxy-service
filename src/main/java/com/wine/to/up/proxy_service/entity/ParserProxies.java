@@ -18,8 +18,8 @@ public class ParserProxies {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Parser parser;
+    @Column(name = "parser_name")
+    private String parserName;
 
     private Float ping;
 }

@@ -14,5 +14,5 @@ import java.util.List;
 
 @Repository
 public interface ParserProxiesRepository extends JpaRepository<ParserProxies, Long> {
-    List<ParserProxies> findAllByParser(Parser parser);
+    List<ParserProxies> findAllByParserName(String parserName);
 }

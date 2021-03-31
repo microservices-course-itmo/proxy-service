@@ -7,6 +7,6 @@ CREATE TABLE proxies
 CREATE TABLE parser_proxies
 (
     id bigint PRIMARY KEY,
-    parser varchar(20),
+    parser_name varchar(50),
     ping float
 )

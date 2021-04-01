@@ -18,3 +18,4 @@ public class ProxyServiceApplication {
         SpringApplication.run(ProxyServiceApplication.class, args);
     }
 }
+//ping jenkins

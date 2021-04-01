@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,8 +60,7 @@ public class ProxyClientImpl implements ProxyClient {
                 log.info("Proxy count : {}", proxyList.size());
                 return proxyList;
             } else {
-                log.info("Trying again with proxy");
-                return getProxyList();
+                return new ArrayList<>();
             }
         } catch (IOException e) {
             log.info("Cannot retrieve proxies: {}", e.getMessage());

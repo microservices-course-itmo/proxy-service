@@ -14,6 +14,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 
 @Service
 @Slf4j
@@ -38,37 +39,68 @@ public class ProxyServiceImpl implements ProxyService {
     @Override
     public void updateProxies() {
         List<Proxy> proxies = proxyClient.getProxyList();
-        proxies.forEach(e -> {
-            if (proxyValidatorService.isProxyAlive(e)) {
-                InetSocketAddress address = (InetSocketAddress) e.address();
-                com.wine.to.up.proxy_service.entity.Proxy proxy = new com.wine.to.up.proxy_service.entity.Proxy(address.getHostName(), address.getPort());
-                if (!proxyRepository.existsByIpAndPort(proxy.getIp(), proxy.getPort())) {
-                    proxyRepository.save(proxy);
+        ForkJoinPool proxyThreadPool = null;
+        try {
+            proxyThreadPool = new ForkJoinPool(10);
+            proxyThreadPool.submit(() -> proxies.parallelStream().forEach(e -> {
+                if (proxyValidatorService.isProxyAlive(e)) {
+                    InetSocketAddress address = (InetSocketAddress) e.address();
+                    com.wine.to.up.proxy_service.entity.Proxy proxy = new com.wine.to.up.proxy_service.entity.Proxy(address.getHostName(), address.getPort());
+                    if (!proxyRepository.existsByIpAndPort(proxy.getIp(), proxy.getPort())) {
+                        proxyRepository.save(proxy);
+                    }
                 }
+            })).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (proxyThreadPool != null) {
+                proxyThreadPool.shutdown();
             }
-        });
-
+        }
     }
 
     @Override
     public void updateParserProxies() {
-        proxyRepository.findAll().forEach(e -> Arrays.stream(Parser.values()).forEach(p -> {
-            Proxy javaProxy = e.getJavaProxy();
-            long ping = proxyValidatorService.pingUrlWithProxy(p.getPath(), javaProxy);
-            if (ping > 0) {
-                ParserProxy proxy = new ParserProxy();
-                proxy.setParser(p);
-                proxy.setProxy(e);
-                proxy.setPing(ping);
-                if (!parserProxiesRepository.existsByProxyAndParser(e, p)) {
-                    parserProxiesRepository.save(proxy);
-                } else {
-                    ParserProxy existProxy = parserProxiesRepository.findFirstByProxyAndParser(e, p);
-                    existProxy.setPing(ping);
-                    parserProxiesRepository.save(existProxy);
+        ForkJoinPool proxyThreadPool = null;
+        try {
+            proxyThreadPool = new ForkJoinPool(10);
+            proxyThreadPool.submit(() -> proxyRepository.findAll().parallelStream().forEach(e -> {
+                ForkJoinPool parserThreadPool = null;
+                try {
+                    parserThreadPool = new ForkJoinPool(6);
+                    parserThreadPool.submit(() -> Arrays.stream(Parser.values()).parallel().forEach(p -> {
+                        Proxy javaProxy = e.getJavaProxy();
+                        long ping = proxyValidatorService.pingUrlWithProxy(p.getPath(), javaProxy);
+                        if (ping > 0) {
+                            ParserProxy proxy = new ParserProxy();
+                            proxy.setParser(p);
+                            proxy.setProxy(e);
+                            proxy.setPing(ping);
+                            if (!parserProxiesRepository.existsByProxyAndParser(e, p)) {
+                                parserProxiesRepository.save(proxy);
+                            } else {
+                                ParserProxy existProxy = parserProxiesRepository.findFirstByProxyAndParser(e, p);
+                                existProxy.setPing(ping);
+                                parserProxiesRepository.save(existProxy);
+                            }
+                        }
+                    })).get();
+                } catch (Exception parserException) {
+                    parserException.printStackTrace();
+                } finally {
+                    if (parserThreadPool != null) {
+                        parserThreadPool.shutdown();
+                    }
                 }
+            })).get();
+        } catch (Exception proxyException) {
+            proxyException.printStackTrace();
+        } finally {
+            if (proxyThreadPool != null) {
+                proxyThreadPool.shutdown();
             }
-        }));
+        }
     }
 
     @Override
@@ -78,14 +110,24 @@ public class ProxyServiceImpl implements ProxyService {
 
     @Override
     public void cleanUselessProxies() {
-        parserProxiesRepository.findAll().forEach(p -> {
-            if (proxyValidatorService.pingUrlWithProxy(
-                    p.getParser().getPath(),
-                    p.getProxy().getJavaProxy()
-            ) < 0) {
-                parserProxiesRepository.delete(p);
+        ForkJoinPool pool = null;
+        try {
+            pool = new ForkJoinPool(10);
+            pool.submit(() -> parserProxiesRepository.findAll().parallelStream().forEach(p -> {
+                if (proxyValidatorService.pingUrlWithProxy(
+                        p.getParser().getPath(),
+                        p.getProxy().getJavaProxy()
+                ) < 0) {
+                    parserProxiesRepository.delete(p);
+                }
+            })).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (pool != null) {
+                pool.shutdown();
             }
-        });
+        }
         proxyRepository.findAll().forEach(p -> {
             if (!parserProxiesRepository.existsByProxy(p)) {
                 proxyRepository.delete(p);

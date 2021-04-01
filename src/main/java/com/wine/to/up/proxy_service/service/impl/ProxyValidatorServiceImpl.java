@@ -17,10 +17,13 @@ public class ProxyValidatorServiceImpl implements ProxyValidatorService {
 
     @Override
     public boolean isProxyAlive(Proxy proxy) {
+        if (proxy == null) {
+            return false;
+        }
         try {
             Jsoup.connect(defaultUrl).proxy(proxy).timeout(10000).get();
             return true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             return false;
         }
     }

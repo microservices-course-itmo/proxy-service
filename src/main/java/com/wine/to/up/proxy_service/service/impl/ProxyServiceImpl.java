@@ -52,7 +52,7 @@ public class ProxyServiceImpl implements ProxyService {
 
     @Override
     public void updateParserProxies() {
-        proxyRepository.getAll().forEach(e -> Arrays.stream(Parser.values()).forEach(p -> {
+        proxyRepository.findAll().forEach(e -> Arrays.stream(Parser.values()).forEach(p -> {
             Proxy javaProxy = e.getJavaProxy();
             long ping = proxyValidatorService.pingUrlWithProxy(p.getPath(), javaProxy);
             if (ping > 0) {

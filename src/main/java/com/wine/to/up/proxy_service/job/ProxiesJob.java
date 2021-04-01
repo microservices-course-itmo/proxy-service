@@ -21,11 +21,7 @@ public class ProxiesJob {
     public void updateProxiesJob() {
         log.info("Started GetProxiesJob at {}", new Date());
         proxyService.updateProxies();
-        log.info("End GetProxiesJob at {}", new Date());
-    }
-
-    @Scheduled(cron = "${cron.job.get.proxies}", initialDelay = 2000L)
-    public void updateParserProxiesJob() {
         proxyService.updateParserProxies();
+        log.info("End GetProxiesJob at {}", new Date());
     }
 }

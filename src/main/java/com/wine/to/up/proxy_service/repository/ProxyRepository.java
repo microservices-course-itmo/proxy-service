@@ -14,9 +14,9 @@ import java.util.stream.Stream;
 
 @Repository
 public interface ProxyRepository extends JpaRepository<Proxy, Long> {
+
     List<Proxy> getAllById(Long id);
 
     boolean existsByIpAndPort(String ip, int port);
 
-    Stream<Proxy> getAll();
 }

@@ -39,4 +39,8 @@ public class Proxy {
         this.ip = ip;
         this.port = port;
     }
+
+    public java.net.Proxy getJavaProxy() {
+        return new java.net.Proxy(java.net.Proxy.Type.HTTP, new InetSocketAddress(ip, port));
+    }
 }

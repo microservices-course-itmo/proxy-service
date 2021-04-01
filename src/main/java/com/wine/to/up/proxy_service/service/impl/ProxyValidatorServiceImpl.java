@@ -28,7 +28,7 @@ public class ProxyValidatorServiceImpl implements ProxyValidatorService {
     public long pingUrlWithProxy(String url, Proxy proxy) {
         try {
             long timeStart = System.currentTimeMillis();
-            Jsoup.connect(defaultUrl).proxy(proxy).timeout(10000).get();
+            Jsoup.connect(url).proxy(proxy).timeout(10000).get();
             long timeEnd = System.currentTimeMillis();
             return timeEnd - timeStart;
         } catch (IOException e) {

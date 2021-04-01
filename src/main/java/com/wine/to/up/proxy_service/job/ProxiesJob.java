@@ -9,18 +9,23 @@ import java.util.Date;
 
 @Component
 @Slf4j
-public class GetProxiesJob {
+public class ProxiesJob {
 
     private final ProxyService proxyService;
 
-    public GetProxiesJob(ProxyService proxyService) {
+    public ProxiesJob(ProxyService proxyService) {
         this.proxyService = proxyService;
     }
 
     @Scheduled(cron = "${cron.job.get.proxies}")
-    public void runJob() {
+    public void updateProxiesJob() {
         log.info("Started GetProxiesJob at {}", new Date());
-        proxyService.getProxies();
+        proxyService.updateProxies();
         log.info("End GetProxiesJob at {}", new Date());
+    }
+
+    @Scheduled(cron = "${cron.job.get.proxies}", initialDelay = 2000L)
+    public void updateParserProxiesJob() {
+        proxyService.updateParserProxies();
     }
 }

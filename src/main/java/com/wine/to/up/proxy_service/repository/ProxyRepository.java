@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author : bgubanov
@@ -14,4 +15,8 @@ import java.util.List;
 @Repository
 public interface ProxyRepository extends JpaRepository<Proxy, Long> {
     List<Proxy> getAllById(Long id);
+
+    boolean existsByIpAndPort(String ip, int port);
+
+    Stream<Proxy> getAll();
 }

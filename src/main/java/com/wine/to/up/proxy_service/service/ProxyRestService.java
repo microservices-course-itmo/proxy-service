@@ -1,6 +1,7 @@
 package com.wine.to.up.proxy_service.service;
 
-import com.wine.to.up.proxy_service.entity.ParserProxies;
+import com.wine.to.up.proxy_service.entity.Parser;
+import com.wine.to.up.proxy_service.entity.ParserProxy;
 
 import java.util.List;
 
@@ -10,7 +11,8 @@ import java.util.List;
  **/
 
 public interface ProxyRestService {
+
     void cleanDatabase();
 
-    List<ParserProxies> getProxies(String serviceName);
+    List<ParserProxy> getProxies(Parser parser);
 }

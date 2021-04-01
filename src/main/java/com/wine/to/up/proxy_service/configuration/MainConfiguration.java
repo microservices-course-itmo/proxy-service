@@ -1,6 +1,7 @@
 package com.wine.to.up.proxy_service.configuration;
 
-import com.wine.to.up.proxy_service.job.GetProxiesJob;
+import com.wine.to.up.proxy_service.repository.ParserProxiesRepository;
+import com.wine.to.up.proxy_service.repository.ProxyRepository;
 import com.wine.to.up.proxy_service.service.ProxyClient;
 import com.wine.to.up.proxy_service.service.ProxyService;
 import com.wine.to.up.proxy_service.service.ProxyValidatorService;
@@ -24,7 +25,11 @@ public class MainConfiguration {
     }
 
     @Bean
-    public ProxyService proxyService(ProxyClient proxyClient, ProxyValidatorService proxyValidatorService) {
-        return new ProxyServiceImpl(proxyClient, proxyValidatorService);
+    public ProxyService proxyService(
+            ProxyClient proxyClient,
+            ProxyValidatorService proxyValidatorService,
+            ProxyRepository proxyRepository,
+            ParserProxiesRepository parserProxiesRepository) {
+        return new ProxyServiceImpl(proxyClient, proxyValidatorService, proxyRepository, parserProxiesRepository);
     }
 }

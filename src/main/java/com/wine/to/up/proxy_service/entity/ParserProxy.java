@@ -16,15 +16,16 @@ import javax.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor
-public class ParserProxies {
+public class ParserProxy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "parser_name")
-    private String parserName;
+    @Enumerated(EnumType.ORDINAL)
+    private Parser parser;
     @ManyToOne
     @JoinColumn(referencedColumnName = "id")
     private Proxy proxy;
-    private Float ping;
+    private Long ping;
 }

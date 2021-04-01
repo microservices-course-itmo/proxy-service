@@ -35,8 +35,8 @@ public class ProxyValidatorServiceImpl implements ProxyValidatorService {
         }
     }
 
-    public long pingUrlWithProxy(String url, com.wine.to.up.proxy_service.entity.Proxy proxy) {
-        return pingUrlWithNetProxy(url, new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxy.getIp(), proxy.getPort())));
+    public long pingUrlWithProxy(String url, Proxy proxy) {
+        return pingUrlWithNetProxy(url, proxy);
     }
 
 }

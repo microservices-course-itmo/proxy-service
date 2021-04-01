@@ -36,8 +36,8 @@ public class MainConfiguration {
     }
 
     @Bean
-    public ProxyRestService proxyRestService() {
-        return new ProxyRestServiceImpl();
+    public ProxyRestService proxyRestService(ProxyService proxyService) {
+        return new ProxyRestServiceImpl(proxyService);
     }
 
 }

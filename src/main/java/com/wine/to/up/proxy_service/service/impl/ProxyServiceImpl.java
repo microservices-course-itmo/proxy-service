@@ -75,4 +75,21 @@ public class ProxyServiceImpl implements ProxyService {
     public List<ParserProxy> getProxies(Parser parser) {
         return parserProxiesRepository.getAllByParserOrderByPingAsc(parser);
     }
+
+    @Override
+    public void cleanUselessProxies() {
+        parserProxiesRepository.findAll().forEach(p -> {
+            if (proxyValidatorService.pingUrlWithProxy(
+                    p.getParser().getPath(),
+                    p.getProxy().getJavaProxy()
+            ) < 0) {
+                parserProxiesRepository.delete(p);
+            }
+        });
+        proxyRepository.findAll().forEach(p -> {
+            if (!parserProxiesRepository.existsByProxy(p)) {
+                proxyRepository.delete(p);
+            }
+        });
+    }
 }

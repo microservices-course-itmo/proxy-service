@@ -12,4 +12,7 @@ public interface ProxyService {
     void updateParserProxies();
 
     List<ParserProxy> getProxies(Parser parser);
+
+    void cleanUselessProxies();
+
 }

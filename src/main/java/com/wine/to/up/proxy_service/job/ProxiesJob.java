@@ -22,6 +22,7 @@ public class ProxiesJob {
         log.info("Started GetProxiesJob at {}", new Date());
         proxyService.updateProxies();
         proxyService.updateParserProxies();
+        proxyService.cleanUselessProxies();
         log.info("End GetProxiesJob at {}", new Date());
     }
 }

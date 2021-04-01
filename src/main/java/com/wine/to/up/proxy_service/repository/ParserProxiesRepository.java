@@ -21,4 +21,6 @@ public interface ParserProxiesRepository extends JpaRepository<ParserProxy, Long
     ParserProxy findFirstByProxyAndParser(Proxy proxy, Parser parser);
 
     List<ParserProxy> getAllByParserOrderByPingAsc(Parser parser);
+
+    boolean existsByProxy(Proxy proxy);
 }

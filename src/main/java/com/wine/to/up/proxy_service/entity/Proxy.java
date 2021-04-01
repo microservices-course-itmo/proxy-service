@@ -4,12 +4,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.net.InetSocketAddress;
+import java.util.Date;
 
 /**
  * @author : bgubanov
@@ -28,6 +32,9 @@ public class Proxy {
 
     private String ip;
     private Integer port;
+    @Column(name = "create_date")
+    @Temporal(TemporalType.TIME)
+    private Date createDate;
 
     public Proxy(java.net.Proxy proxy) {
         InetSocketAddress socketAddress = (InetSocketAddress) proxy.address();

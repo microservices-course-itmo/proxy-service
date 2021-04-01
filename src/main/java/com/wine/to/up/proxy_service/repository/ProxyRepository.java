@@ -4,6 +4,7 @@ import com.wine.to.up.proxy_service.entity.Proxy;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,4 +17,6 @@ public interface ProxyRepository extends JpaRepository<Proxy, Long> {
     List<Proxy> getAllById(Long id);
 
     boolean existsByIpAndPort(String ip, Integer port);
+
+    List<Proxy> getAllByCreateDateIsLessThan(Date now);
 }

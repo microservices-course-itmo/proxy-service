@@ -26,5 +26,11 @@ public class ParserProxies {
     @ManyToOne
     @JoinColumn(referencedColumnName = "id")
     private Proxy proxy;
-    private Float ping;
+    private Long ping;
+
+    public ParserProxies(String parserName, Proxy proxy, Long ping) {
+        this.parserName = parserName;
+        this.proxy = proxy;
+        this.ping = ping;
+    }
 }

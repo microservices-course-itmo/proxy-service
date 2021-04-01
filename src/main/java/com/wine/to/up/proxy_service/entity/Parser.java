@@ -6,7 +6,7 @@ package com.wine.to.up.proxy_service.entity;
  **/
 public enum Parser {
     AM_PARSER_SERVICE("https://amwine.ru"),
-    PARSER_SERVICE("http://perekrestok-store.ru/"),
+    CROSSROAD_PARSER_SERVICE("http://perekrestok-store.ru/"),
     LENTA_PARSER_SERVICE("https://lenta.com/"),
     SIMPLE_PARSER_SERVICE("https://simplewine.ru/"),
     WINESTYLE_PARSER_SERVICE("https://spb.winestyle.ru/"),

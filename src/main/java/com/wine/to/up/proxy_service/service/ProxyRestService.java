@@ -10,6 +10,7 @@ import java.util.List;
  **/
 
 public interface ProxyRestService {
+
     void cleanDatabase();
 
     List<ParserProxies> getProxies(String serviceName);

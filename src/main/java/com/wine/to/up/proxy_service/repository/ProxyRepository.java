@@ -14,4 +14,6 @@ import java.util.List;
 @Repository
 public interface ProxyRepository extends JpaRepository<Proxy, Long> {
     List<Proxy> getAllById(Long id);
+
+    boolean existsByIpAndPort(String ip, Integer port);
 }

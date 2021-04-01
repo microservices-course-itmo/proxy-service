@@ -23,12 +23,15 @@ import java.util.stream.Collectors;
 public class ProxyController {
     //get /parsers список всех парсеров
     //get /proxies?serviceName=am-parser-service список всех актуальных проксей, сортированный по увеличению времени отклика
-    @Resource
-    private ProxyRestService restService;
+    private ProxyRestService proxyRestService;
+
+    public ProxyController(ProxyRestService proxyRestService) {
+        this.proxyRestService = proxyRestService;
+    }
 
     @GetMapping("/proxies")
     public List<ParserProxies> getProxies(@RequestParam String serviceName) {
-        return restService.getProxies(serviceName);
+        return proxyRestService.getProxies(serviceName);
     }
 
     @GetMapping("/parsers")
@@ -38,6 +41,6 @@ public class ProxyController {
 
     @GetMapping("/clean")
     public void cleanDatabase() {
-        restService.cleanDatabase();
+        proxyRestService.cleanDatabase();
     }
 }

@@ -43,6 +43,7 @@ public class ProxyServiceImpl implements ProxyService {
     @Override
     public void updateProxies() {
         List<Proxy> proxies = proxyClient.getProxyList();
+        Date createDate = new Date();
         ForkJoinPool proxyThreadPool = null;
         try {
             proxyThreadPool = new ForkJoinPool(10);
@@ -50,6 +51,7 @@ public class ProxyServiceImpl implements ProxyService {
                 if (proxyValidatorService.isProxyAlive(e)) {
                     InetSocketAddress address = (InetSocketAddress) e.address();
                     com.wine.to.up.proxy_service.entity.Proxy proxy = new com.wine.to.up.proxy_service.entity.Proxy(address.getHostName(), address.getPort());
+                    proxy.setCreateDate(createDate);
                     if (!proxyRepository.existsByIpAndPort(proxy.getIp(), proxy.getPort())) {
                         proxyRepository.save(proxy);
                     }
@@ -74,7 +76,7 @@ public class ProxyServiceImpl implements ProxyService {
         List<ParserProxy> parserProxiesList4Delete = new ArrayList<>();
         log.info("Получил список проксей парсеров, старее получаса - {}", parserProxiesList.size());
         for (ParserProxy parserProxy : parserProxiesList) {
-            long ping = proxyValidatorService.pingUrlWithProxy(Parser.valueOf(parserProxy.getParserName()).getPath(), parserProxy.getProxy());
+            long ping = proxyValidatorService.pingUrlWithProxy(parserProxy.getParser().getPath(), parserProxy.getProxy().getJavaProxy());
             if (ping == -1) {
                 log.info("Удалил проксю парсера, id = {}", parserProxy.getId());
                 parserProxiesList4Delete.add(parserProxy);
@@ -152,30 +154,4 @@ public class ProxyServiceImpl implements ProxyService {
         return parserProxiesRepository.getAllByParserOrderByPingAsc(parser);
     }
 
-    @Override
-    public void cleanUselessProxies() {
-        ForkJoinPool pool = null;
-        try {
-            pool = new ForkJoinPool(10);
-            pool.submit(() -> parserProxiesRepository.findAll().parallelStream().forEach(p -> {
-                if (proxyValidatorService.pingUrlWithProxy(
-                        p.getParser().getPath(),
-                        p.getProxy().getJavaProxy()
-                ) < 0) {
-                    parserProxiesRepository.delete(p);
-                }
-            })).get();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (pool != null) {
-                pool.shutdown();
-            }
-        }
-        proxyRepository.findAll().forEach(p -> {
-            if (!parserProxiesRepository.existsByProxy(p)) {
-                proxyRepository.delete(p);
-            }
-        });
-    }
 }

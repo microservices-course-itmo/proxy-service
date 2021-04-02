@@ -24,7 +24,7 @@ public interface ParserProxiesRepository extends JpaRepository<ParserProxy, Long
 
     boolean existsByProxy(Proxy proxy);
 
-    List<ParserProxy> findAllByParser(String Parser);
+    List<ParserProxy> findAllByParser(Parser Parser);
 
     List<ParserProxy> findAllByProxyIn(List<Proxy> list);
 }

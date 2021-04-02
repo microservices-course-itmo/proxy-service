@@ -13,9 +13,5 @@ public interface ProxyService {
 
     List<ParserProxy> getProxies(Parser parser);
 
-    void cleanUselessProxies();
-
-    void getProxies();
-
     void deleteProxies();
 }

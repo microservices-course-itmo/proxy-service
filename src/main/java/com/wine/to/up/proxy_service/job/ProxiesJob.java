@@ -27,6 +27,6 @@ public class ProxiesJob {
 
     @Scheduled(cron = "${cron.job.get.proxies}")
     public void cleanProxies() {
-        proxyService.cleanUselessProxies();
+        proxyService.deleteProxies();
     }
 }

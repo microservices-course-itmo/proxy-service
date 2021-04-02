@@ -15,4 +15,7 @@ public interface ProxyService {
 
     void cleanUselessProxies();
 
+    void getProxies();
+
+    void deleteProxies();
 }

@@ -13,12 +13,16 @@ import org.springframework.stereotype.Service;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
 @Service
 @Slf4j
 public class ProxyServiceImpl implements ProxyService {
+
+    private static final long HOUR = 1800000;
 
     private final ProxyClient proxyClient;
     private final ProxyValidatorService proxyValidatorService;
@@ -56,6 +60,46 @@ public class ProxyServiceImpl implements ProxyService {
         } finally {
             if (proxyThreadPool != null) {
                 proxyThreadPool.shutdown();
+            }
+        }
+    }
+
+    @Override
+    public void deleteProxies() {
+        List<com.wine.to.up.proxy_service.entity.Proxy> proxyList =
+                proxyRepository.getAllByCreateDateIsLessThan(new Date(new Date().getTime() - HOUR));
+        log.info("Получил список проксей, старее получаса - {}", proxyList.size());
+        List<ParserProxy> parserProxiesList =
+                parserProxiesRepository.findAllByProxyIn(proxyList);
+        List<ParserProxy> parserProxiesList4Delete = new ArrayList<>();
+        log.info("Получил список проксей парсеров, старее получаса - {}", parserProxiesList.size());
+        for (ParserProxy parserProxy : parserProxiesList) {
+            long ping = proxyValidatorService.pingUrlWithProxy(Parser.valueOf(parserProxy.getParserName()).getPath(), parserProxy.getProxy());
+            if (ping == -1) {
+                log.info("Удалил проксю парсера, id = {}", parserProxy.getId());
+                parserProxiesList4Delete.add(parserProxy);
+                parserProxiesRepository.delete(parserProxy);
+            } else {
+                parserProxy.setPing(ping);
+                parserProxiesRepository.save(parserProxy);
+                log.info("Обновил информацию по проксе парсера, id = {}", parserProxy.getId());
+            }
+        }
+        parserProxiesList.removeAll(parserProxiesList4Delete);
+        for (com.wine.to.up.proxy_service.entity.Proxy proxy : proxyList) {
+            boolean isProxyActive = false;
+            for (ParserProxy parserProxy : parserProxiesList) {
+                if (parserProxy.getProxy().getId().equals(proxy.getId())) {
+                    isProxyActive = true;
+                }
+            }
+            if (!isProxyActive) {
+                log.info("Удалил прокси, id = {}", proxy.getId());
+                proxyRepository.delete(proxy);
+            } else {
+                proxy.setCreateDate(new Date());
+                proxyRepository.save(proxy);
+                log.info("Обновил прокси, id = {}", proxy.getId());
             }
         }
     }

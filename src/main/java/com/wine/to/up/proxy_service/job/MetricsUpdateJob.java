@@ -27,9 +27,7 @@ public class MetricsUpdateJob {
         for (Parser parser : Parser.values()) {
             int availableProxiesCount = parserProxiesRepository.getAllByParserOrderByPingAsc(parser).size();
             proxyMetricsCollector.setProxiesAvailable(parser, availableProxiesCount);
-            log.debug("Available proxies for {}: {}", parser.name(), availableProxiesCount);
         }
-        log.info("Updated metrics");
     }
 
 }

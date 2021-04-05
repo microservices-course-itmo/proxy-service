@@ -33,6 +33,9 @@ public class ProxyClientImpl implements ProxyClient {
     @Value("${proxy.api-key}")
     private String apiKey;
 
+    @Value("${proxy.api2-url}")
+    private String api2Url;
+
     private final OkHttpClient client = new OkHttpClient();
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -52,7 +55,7 @@ public class ProxyClientImpl implements ProxyClient {
         //Инициализация класса запроса
         Request request = new Request.Builder().url(builder.build()).build();
 
-        builder = HttpUrl.parse("https://www.proxy-list.download/api/v1/get").newBuilder();
+        builder = HttpUrl.parse(api2Url).newBuilder();
         builder.addQueryParameter("type", "http");
 
 

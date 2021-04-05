@@ -14,6 +14,7 @@ import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -48,7 +49,6 @@ public class ProxyClientImpl implements ProxyClient {
         builder.addQueryParameter("key", apiKey);
         builder.addQueryParameter("type", "1");
 
-        
         //Инициализация класса запроса
         Request request = new Request.Builder().url(builder.build()).build();
 
@@ -68,9 +68,8 @@ public class ProxyClientImpl implements ProxyClient {
             ProxyResponse proxyResponse = mapper.readValue(response.body().bytes(), ProxyResponse.class);
             Response response2 = client.newCall(r2).execute();
 
-            List<String> proxyServers =  new ArrayList<String>(Arrays.asList(response2.body().string().split("\n")));
+            List<String> proxyServers = new ArrayList<>(Arrays.asList(response2.body().string().split("\n")));
 
-            
 
             log.info("HEREEEEEEEEE {}", builder.build().toString());
             //наша склейка запросов
@@ -80,26 +79,22 @@ public class ProxyClientImpl implements ProxyClient {
                     .map(proxy -> new Proxy(Proxy.Type.HTTP,
                             new InetSocketAddress(proxy.ip, proxy.port)))
                     .collect(Collectors.toList());
-            
-            // proxyList.addAll(proxyServers.stream().
-            //         map(str -> {
-            //             new Proxy(Proxy.Type.HTTP,
-            //             new InetSocketAddress(str.split(":")[0], Integer.parseInt(str.split(":")[1])))})
-            //         .collect(Collectors.toList());
 
-            for (String proxy : proxyServers) {
-                String[] ipAndPort = proxy.split(":");
-                proxyList.add(new Proxy(Proxy.Type.HTTP,  new InetSocketAddress(ipAndPort[0], Integer.parseInt(ipAndPort[1].strip()))));
-                
-            }
-            
+            proxyList.addAll(proxyServers.stream().map(
+                    proxy -> {
+                        String[] ipAndPort = proxy.split(":");
+                        int port = Integer.parseInt(ipAndPort[1].strip());
+                        return new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ipAndPort[0], port));
+                    }
+            ).collect(Collectors.toList()));
 
-            if(!proxyList.isEmpty()) {
+            if (!proxyList.isEmpty()) {
                 log.info("Proxy count : {}", proxyList.size());
                 return proxyList;
             } else {
                 return new ArrayList<>();
             }
+
         } catch (IOException e) {
             log.info("Cannot retrieve proxies: {}", e.getMessage());
             return Collections.emptyList();

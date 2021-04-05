@@ -2,6 +2,7 @@ package com.wine.to.up.proxy_service.controller;
 
 import com.wine.to.up.proxy_service.entity.Parser;
 import com.wine.to.up.proxy_service.entity.ParserProxy;
+import com.wine.to.up.proxy_service.entity.Proxy;
 import com.wine.to.up.proxy_service.service.ProxyRestService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +29,11 @@ public class ProxyController {
     private ProxyRestService restService;
 
     @GetMapping("/proxies")
-    public List<ParserProxy> getProxies(@RequestParam String serviceName) {
+    public List<Proxy> getProxies(@RequestParam String serviceName) {
         try {
-            return restService.getProxies(Parser.valueOf(serviceName));
+            return restService.getProxies(Parser.valueOf(serviceName)).stream()
+                    .map(ParserProxy::getProxy)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             return Collections.emptyList();
         }

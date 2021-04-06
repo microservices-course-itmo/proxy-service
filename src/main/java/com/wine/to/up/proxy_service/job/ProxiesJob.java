@@ -17,9 +17,7 @@ public class ProxiesJob {
         this.proxyService = proxyService;
     }
 
-    // @Scheduled(cron = "${cron.job.get.proxies}")
-    
-    @Scheduled(fixedDelay = 100000)
+    @Scheduled(cron = "${cron.job.get.proxies}")
     public void updateProxiesJob() {
         log.info("Started GetProxiesJob at {}", new Date());
         proxyService.updateProxies();

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/")
 public class ProxyController {
     //get /parsers список всех парсеров
-    //get /proxies?serviceName=am-parser-service список всех актуальных проксей, сортированный по увеличению времени отклика
+    //get /proxies?serviceName=AM_PARSER_SERVICE список всех актуальных проксей, сортированный по увеличению времени отклика
     @Resource
     private ProxyRestService restService;
 

@@ -102,14 +102,6 @@ public class ProxyClientImpl implements ProxyClient {
     @NoArgsConstructor
     @Getter
     @Setter
-    static class ProxyResponseNew {
-        List<String> data;
-    }
-
-
-    @NoArgsConstructor
-    @Getter
-    @Setter
     static class ProxyJson {
         String ip;
         Integer port;

@@ -30,7 +30,7 @@ public class ProxyController {
     private ProxyRestService restService;
     
     @GetMapping("/proxies")
-    @ApiOperation(value = "Получение списка прокси для парсера", httpMethod = "GET", response = "List<ParserProxy>", notes = "Возвращает прокси для определённого парсера, ранжированные по увеличению времени ответа")
+    @ApiOperation(value = "Получение списка прокси для парсера", httpMethod = "GET", response = "List<Proxy>", notes = "Возвращает прокси для определённого парсера, ранжированные по увеличению времени ответа")
     public List<Proxy> getProxies(
         @ApiParam(
             name = "serviceName",

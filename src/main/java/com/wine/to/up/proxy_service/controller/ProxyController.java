@@ -2,6 +2,7 @@ package com.wine.to.up.proxy_service.controller;
 
 import com.wine.to.up.proxy_service.entity.Parser;
 import com.wine.to.up.proxy_service.entity.ParserProxy;
+import com.wine.to.up.proxy_service.entity.Proxy;
 import com.wine.to.up.proxy_service.service.ProxyRestService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +31,7 @@ public class ProxyController {
     
     @GetMapping("/proxies")
     @ApiOperation(value = "Получение прокси для парсера", httpMethod = "GET", response = "List<ParserProxy>", notes = "Возвращает прокси для определённого парсера, ранжированные по увеличению времени ответа")
-    public List<ParserProxy> getProxies(
+    public List<Proxy> getProxies(
         @ApiParam(
             name = "serviceName",
             type = "String",
@@ -39,7 +40,9 @@ public class ProxyController {
             required = true)
         @RequestParam String serviceName) {
         try {
-            return restService.getProxies(Parser.valueOf(serviceName));
+            return restService.getProxies(Parser.valueOf(serviceName)).stream()
+                    .map(ParserProxy::getProxy)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             return Collections.emptyList();
         }

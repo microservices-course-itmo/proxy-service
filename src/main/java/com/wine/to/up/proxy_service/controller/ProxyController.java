@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -26,9 +27,17 @@ public class ProxyController {
     //get /proxies?serviceName=AM_PARSER_SERVICE список всех актуальных проксей, сортированный по увеличению времени отклика
     @Resource
     private ProxyRestService restService;
-
+    
     @GetMapping("/proxies")
-    public List<ParserProxy> getProxies(@RequestParam String serviceName) {
+    @ApiOperation(value = "Получение прокси для парсера", httpMethod = "GET", response = "List<ParserProxy>", notes = "Возвращает прокси для определённого парсера, ранжированные по увеличению времени ответа")
+    public List<ParserProxy> getProxies(
+        @ApiParam(
+            name = "serviceName",
+            type = "String",
+            value = "Название парсера",
+            example = "AM_PARSER_SERVICE",
+            required = true)
+        @RequestParam String serviceName) {
         try {
             return restService.getProxies(Parser.valueOf(serviceName));
         } catch (Exception e) {
@@ -37,11 +46,13 @@ public class ProxyController {
     }
 
     @GetMapping("/parsers")
+    @ApiOperation(value = "Получение списка всех парсеров", httpMethod = "GET", response = "List<String>", notes = "Возвращает список всех парсеров")
     public List<String> getParsers() {
         return Arrays.stream(Parser.values()).map(Enum::name).collect(Collectors.toList());
     }
-
+    
     @GetMapping("/clean")
+    @ApiOperation(value = "Очистка базы данных", httpMethod = "GET", notes = "Очищает базу данных")
     public void cleanDatabase() {
         restService.cleanDatabase();
     }

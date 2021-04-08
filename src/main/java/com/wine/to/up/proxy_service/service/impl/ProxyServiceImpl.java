@@ -76,7 +76,7 @@ public class ProxyServiceImpl implements ProxyService {
         List<ParserProxy> parserProxiesList4Delete = new ArrayList<>();
         log.info("Получил список проксей парсеров, старее получаса - {}", parserProxiesList.size());
         for (ParserProxy parserProxy : parserProxiesList) {
-            long ping = proxyValidatorService.pingUrlWithProxy(parserProxy.getParser().getPath(), parserProxy.getProxy().getJavaProxy());
+            long ping = proxyValidatorService.pingUrlWithProxy(parserProxy.getParser().getPath(), parserProxy.getProxy().gotJavaProxy());
             if (ping == -1) {
                 log.info("Удалил проксю парсера, id = {}", parserProxy.getId());
                 parserProxiesList4Delete.add(parserProxy);
@@ -116,7 +116,7 @@ public class ProxyServiceImpl implements ProxyService {
                 try {
                     parserThreadPool = new ForkJoinPool(6);
                     parserThreadPool.submit(() -> Arrays.stream(Parser.values()).parallel().forEach(p -> {
-                        Proxy javaProxy = e.getJavaProxy();
+                        Proxy javaProxy = e.gotJavaProxy();
                         long ping = proxyValidatorService.pingUrlWithProxy(p.getPath(), javaProxy);
                         if (ping > 0) {
                             ParserProxy proxy = new ParserProxy();

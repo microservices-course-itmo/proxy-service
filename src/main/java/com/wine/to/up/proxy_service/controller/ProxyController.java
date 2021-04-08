@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  **/
 
 @RestController
-@RequestMapping("/")
+@RequestMapping
 public class ProxyController {
     //get /parsers список всех парсеров
     //get /proxies?serviceName=AM_PARSER_SERVICE список всех актуальных проксей, сортированный по увеличению времени отклика
@@ -43,6 +43,18 @@ public class ProxyController {
         try {
             return restService.getProxies(Parser.valueOf(serviceName)).stream()
                     .map(ParserProxy::getProxy)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
+
+    @GetMapping("/proxies_with_count")
+    public List<Proxy> getProxiesWithCount(@RequestParam String serviceName, @RequestParam Long count) {
+        try {
+            return restService.getProxies(Parser.valueOf(serviceName)).stream()
+                    .map(ParserProxy::getProxy)
+                    .limit(count)
                     .collect(Collectors.toList());
         } catch (Exception e) {
             return Collections.emptyList();
